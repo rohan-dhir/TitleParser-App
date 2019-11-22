@@ -94,7 +94,14 @@ import org.json.simple.parser.JSONParser;
     }
 
     static void searchDescription() {
-        //Searches product description.
+        for (int i = 0; i < AppFrame.prodTitleArr.length; i++) {
+	        for(int j = 0; j < AppFrame.descrArr.length; j++) {
+
+                if (AppFrame.prodTitleArr[i].equals(AppFrame.descrArr[j])) {
+                    System.out.println(AppFrame.prodTitleArr[i]);
+	            } 
+	        }
+	    }
     }
     
     //Display the final output
