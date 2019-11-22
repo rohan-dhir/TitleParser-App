@@ -19,8 +19,8 @@ import org.json.simple.parser.JSONParser;
 		
 	MethodHandler() {
 		parser = new JSONParser();
-	}
-
+    }
+    
     public static void searchDatabase() {
         try {
             //Specify the location of the JSON File
@@ -43,11 +43,51 @@ import org.json.simple.parser.JSONParser;
                     }
                 }
             }
-            //If a brand match was not detected, search product description instead
+            //Search product description if brand name not found.
             if (brand == null) {
                 searchDescription();
                 return;
             }
+
+            //Find matching product name within the brand
+				productsArr = (JSONArray) productList.get(brand);
+				
+				for(int i = 0; i < AppFrame.prodTitleArr.length; i++) {
+					for(int j = 0; j < productsArr.size(); j++) {
+						if(productsArr.get(j).equals(AppFrame.prodTitleArr[i]))
+						{
+							product = AppFrame.prodTitleArr[i];
+							System.out.println("Product Name is " + product);
+						}
+					}
+				}
+				
+				//Search product description if product not found.
+				if(product == null) {
+					searchDescription();
+					return;
+				}
+				
+				JSONObject modelList = (JSONObject) jsonObj.get("Models");
+				JSONArray modelArr = (JSONArray) modelList.get(product);
+				
+				for(int i = 0; i < AppFrame.prodTitleArr.length; i++) {
+					for (int j = 0; j < modelArr.size(); j++) {
+						if(modelArr.get(j).equals(AppFrame.prodTitleArr[i])) {
+							model = AppFrame.prodTitleArr[i];
+							System.out.println("Model is "+ model);
+						}
+					}
+				}
+				
+				//Search product description if model not found.
+				if (model == null) {
+					searchDescription();
+					return;
+				}
+				
+                suggestTitle(brand, product, model);
+                
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -55,5 +95,13 @@ import org.json.simple.parser.JSONParser;
 
     static void searchDescription() {
         //Searches product description.
+    }
+    
+    //Display the final output
+	static void suggestTitle(String brand, String product, String model) {
+        JOptionPane.showMessageDialog(
+                null, 
+                "The parsed title is: " + brand + " " + product + " " + model
+                );
     }
  }
