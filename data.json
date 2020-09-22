@@ -1,0 +1,44 @@
+{
+  "Brand List":[
+    "Amazon",
+    "Nintendo",
+    "Nikon"
+  ],
+  "Product List":[
+    "Echo",
+    "Echo Dot",
+    "Switch",
+    "Switch Lite",
+    "DSLR",
+    "CoolPix",
+    "Telephoto Zoom Lens"
+  ],
+  "Model List":[
+    "3rd Gen",
+    "iPhone",
+    "Android",
+    "Turquoise",
+    "Yellow",
+    "Black",
+    "D3400",
+    "D750",
+    "P900",
+    "70-300mm f/4-5.6G"
+  ],
+
+  "Products":{
+    "Amazon":["Echo","Echo Dot"],
+    "Nintendo":["Switch -","Switch Lite -"],
+    "Nikon":["Lens","DSLR","CoolPix"]
+  },
+
+  "Models":{
+    "Echo":["3rd Gen Black","3rd Gen Charcoal"],
+    "Echo Dot":["3rd Gen Blue"],
+    "Switch -":["With Neon Red and Neon Blue Joy-Cons","With Grey Joy-Cons"],
+    "Switch Lite -":["Turquoise","Yellow", "Grey"],
+    "Lens":["70-300mm f/4-5.6G Telephoto", "50mm f/1.8G AF-S"],
+    "DSLR":["D3400","D750","D810"],
+    "CoolPix":["B500","D900"]
+  }
+}
