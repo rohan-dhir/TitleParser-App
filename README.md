@@ -4,7 +4,7 @@ This is a Java Maven application that parses a given title of a product based on
 
 ## Overview
 
-The purpose of this project is to provide more elegant product titles for E-commerce websites such as Amazon by suggesting a simpler title whilst omitting unnecessary details that may belong in the description rather than a title. This can improve reability and ease of use when searching for specific products. 
+The purpose of this project is to provide more elegant product titles for e-commerce websites such as Amazon by suggesting a simpler title whilst omitting unnecessary details that may belong in the description rather than a title. This can improve reability and ease of use when searching for specific products. 
 
 This project utilizes json-simple in order to read and write to JSON files, which act as our database for the purpose of this application. In order to parse a title, we first search our database for known titles and products and try to match the words given by the user to parse the title. If we cannot find a match in our database, we then move on to the given description match the number of occurences of the given words in the title with the description. We then assume that these words are the title and add them to our databse.
 
