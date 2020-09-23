@@ -10,7 +10,7 @@ This project utilizes json-simple in order to read and write to JSON files, whic
 
 ## Challenges
 
-This application is in no way a 'one size fits all' solution, however it is an attempt to demonstrate how one may approach the problem by creating a knowledge base of known information of different products and matching the title provided by the user in order to parse it. 
+This application is in no way a 'one size fits all' solution, however it is an attempt to demonstrate how one may approach the problem of creating a 'smart' title solution by creating a knowledge base of known information of different products and matching the title provided by the user in order to parse it. 
 
 ## Further Improvment 
 
