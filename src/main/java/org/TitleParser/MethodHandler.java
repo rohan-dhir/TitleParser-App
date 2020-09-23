@@ -5,110 +5,145 @@ package org.TitleParser;
  */
 
 import javax.swing.JOptionPane;
+import java.util.HashMap;
+import java.util.Map;
 import java.io.FileReader;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
- public class MethodHandler {
+public class MethodHandler {
 
-    static JSONParser parser;
-	
-    //Format of title follows {brand, product, model}
+	static JSONParser parser;
+	static Map <Integer, String> titleMap = new HashMap<>();
+
+	//Format of title follows {brand, product, model}
 	static String brand, product, model;
-		
+
 	MethodHandler() {
 		parser = new JSONParser();
-    }
-    
-    public static void searchDatabase() {
-        try {
-            //Specify the location of the JSON File
-            Object obj = parser.parse(new FileReader(
-                    "GitHub/TitleParser-App/data.json"));
-            
-            JSONObject jsonObj = (JSONObject) obj;
-            
-            JSONObject productList = (JSONObject) jsonObj.get("Products");
-            JSONArray productsArr = (JSONArray) productList.get("");
-            
-            //Match brand name in title with JSON object
-            for(int i = 0; i < AppFrame.prodTitleArr.length; i++)  {
-                for(int j = 0; j < productList.size(); j++) {
-                    productsArr = (JSONArray) productList.get(AppFrame.prodTitleArr[i]);
-                    if(productsArr != null) {
-                        brand = AppFrame.prodTitleArr[i];
-                        System.out.println("Brand Name is " + brand);
-                        break;
-                    }
-                }
-            }
-            //Search product description if brand name not found.
-            if (brand == null) {
-                searchDescription();
-                return;
-            }
+	}
 
-            //Find matching product name within the brand
-				productsArr = (JSONArray) productList.get(brand);
-				
-				for(int i = 0; i < AppFrame.prodTitleArr.length; i++) {
-					for(int j = 0; j < productsArr.size(); j++) {
-						if(productsArr.get(j).equals(AppFrame.prodTitleArr[i]))
-						{
-							product = AppFrame.prodTitleArr[i];
-							System.out.println("Product Name is " + product);
-						}
-					}
-				}
-				
-				//Search product description if product not found.
-				if(product == null) {
-					searchDescription();
-					return;
-				}
-				
-				JSONObject modelList = (JSONObject) jsonObj.get("Models");
-				JSONArray modelArr = (JSONArray) modelList.get(product);
-				
-				for(int i = 0; i < AppFrame.prodTitleArr.length; i++) {
-					for (int j = 0; j < modelArr.size(); j++) {
-						if(modelArr.get(j).equals(AppFrame.prodTitleArr[i])) {
-							model = AppFrame.prodTitleArr[i];
-							System.out.println("Model is "+ model);
-						}
-					}
-				}
-				
-				//Search product description if model not found.
-				if (model == null) {
-					searchDescription();
-					return;
-				}
-				
-                suggestTitle(brand, product, model);
-                
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
-    static void searchDescription() {
-        for (int i = 0; i < AppFrame.prodTitleArr.length; i++) {
-	        for(int j = 0; j < AppFrame.descrArr.length; j++) {
+	//Searches through JSON file for matching title
+	public static void searchDatabase() {
 
-                if (AppFrame.prodTitleArr[i].equals(AppFrame.descrArr[j])) {
-                    System.out.println(AppFrame.prodTitleArr[i]);
-	            } 
-	        }
-	    }
-    }
-    
-    //Display the final output
+		//Add title entered by user to HashMap
+		for (int i = 0; i < AppFrame.prodTitleArr.length; i++) {
+			titleMap.put(i, AppFrame.prodTitleArr[i]);
+		}
+
+			try {
+				//Specify the location of the JSON File
+				Object obj = parser.parse(new FileReader(
+						"GitHub/TitleParser-App/data.json"));
+
+				JSONObject jsonObj = (JSONObject) obj;
+
+				JSONObject productList = (JSONObject) jsonObj.get("Products");
+				JSONArray productsArr = (JSONArray) productList.get("");
+
+				//Match brand name in title with JSON object
+				brand = searchArrAgainstDatabase(productsArr, productList, "");
+
+
+				//Find matching product name within the brand
+				if(!brand.equals("")) {
+
+					System.out.println("Brand Name is " + brand);
+
+					productsArr = (JSONArray) productList.get(brand);
+					product = searchArrAgainstDatabase(productsArr, productList, brand);
+				}
+
+				//Match model with product name
+				 if(!product.equals("")) {
+					System.out.println("Product Name is " + product);
+
+					JSONObject modelList = (JSONObject) jsonObj.get("Models");
+					JSONArray modelArr = (JSONArray) modelList.get(product);
+
+					model = searchArrAgainstDatabase(modelArr, modelList, product);
+				}
+
+				 suggestTitle(brand, product, model);
+
+
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+	}
+
+	//Searches database for values matching the entered title
+	static String searchArrAgainstDatabase(JSONArray arr, JSONObject listObj, String listName) {
+		String val;
+		arr = (JSONArray) listObj.get(listName);
+		Object obj;
+
+		//If the name of the list is currently unknown, find a match
+		if (arr == null) {
+			for (int i = 0; i < titleMap.size(); i++) {
+				obj = listObj.get(titleMap.get(i));
+
+				if (obj != null) {
+					val = titleMap.get(i);
+					return val;
+				}
+			}
+
+		//If we know the name of the list, search within it
+		} else {
+			for (int i = 0; i < titleMap.size(); i++) {
+
+				obj = titleMap.get(i);
+
+				if(arr.contains(obj)) {
+					val = (String) obj;
+					return val;
+				}
+			}
+		}
+
+		//Search description if no results are found in the title
+		return searchDescr(arr, listObj, listName);
+	}
+
+	//Searches description for matching words if not found in JSON file
+	static String searchDescr(JSONArray arr, JSONObject listObj, String listName) {
+		String val;
+		Object obj;
+
+		if (arr == null) {
+			for (int i = 0; i < AppFrame.descrArr.length; i++) {
+				System.out.println("Test");
+				obj = listObj.get(AppFrame.descrArr[i]);
+
+				if (obj != null) {
+					val = titleMap.get(i);
+					return val;
+				}
+			}
+		} else {
+			for (int i = 0; i < AppFrame.descrArr.length; i++) {
+
+				if(arr.get(i).equals(AppFrame.descrArr[i])) {
+					val = AppFrame.descrArr[i];
+					return val;
+				}
+			}
+		}
+
+		//Return empty string if no results are found
+		return "";
+
+	}
+
+	//Display the final output
 	static void suggestTitle(String brand, String product, String model) {
-        JOptionPane.showMessageDialog(
-                null, 
-                "The parsed title is: " + brand + " " + product + " " + model
-                );
-    }
- }
+		  JOptionPane.showMessageDialog(
+				  null,
+				  "The parsed title is: " + brand + " " + product + " " + model
+				  );
+	  }
+}
